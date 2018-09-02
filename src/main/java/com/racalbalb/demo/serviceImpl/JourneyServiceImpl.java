@@ -21,6 +21,7 @@ import java.util.Optional;
 public class JourneyServiceImpl implements JourneyService {
     /**
      * TODO : Do it better for error
+     * TODO : Exception when FK on delete
      */
     @Autowired
     private JourneyRepository journeyRepository;
