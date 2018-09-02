@@ -14,15 +14,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.isA;
 
 @RunWith(MockitoJUnitRunner.class)
-
 public class DriverServiceImplTest {
 
     @InjectMocks
     private DriverServiceImpl driverServiceImpl;
-
 
     @Mock
     private DriverRepository driverRepository;
@@ -31,34 +29,33 @@ public class DriverServiceImplTest {
     public void before() {
 
     }
+
     @Test
-    public void testSaveDriver() throws Exception {
+    public void testSaveDriver() {
         Driver driver = new Driver(1L,"aa", "bb");
         Driver mockDriver = new Driver(1L,"aa", "bb");
-        Mockito.when(driverRepository.save(any(Driver.class))).thenReturn(mockDriver);
+        Mockito.when(driverRepository.save(isA(Driver.class))).thenReturn(mockDriver);
         Driver res = driverRepository.save(driver);
-        List<Driver> lstDrivers = driverRepository.findAll();
-        Assert.assertTrue(res.getId() == 1 );
+        Assert.assertEquals(res.getId(), mockDriver.getId());
     }
     @Test
-    public void testGetDriverById() throws Exception {
-        Driver driver = new Driver(1L,"aa", "bb");
+    public void testGetDriverById() {
         Driver mockDriver = new Driver(1L,"aa", "bb");
         List<Driver> mockDrivers = new ArrayList<>();
         mockDrivers.add(mockDriver);
         Mockito.when(driverRepository.getOne(1L)).thenReturn(mockDriver);
         Driver res = driverRepository.getOne(1L);
-        Assert.assertTrue(res.getId() == mockDriver.getId());
+        Assert.assertEquals(res.getId(), mockDriver.getId());
+
     }
     @Test
-    public void testDeleteDriverById() throws Exception {
-        Driver driver = new Driver(1L,"aa", "bb");
+    public void testDeleteDriverById() {
         Driver mockDriver = new Driver(1L,"aa", "bb");
         List<Driver> mockDrivers = new ArrayList<>();
         mockDrivers.add(mockDriver);
         Mockito.when(driverRepository.getOne(1L)).thenReturn(null);
         driverRepository.deleteById(1L);
         Driver res = driverRepository.getOne(1L);
-        Assert.assertTrue(res == null);
+        Assert.assertNull(res);
     }
 }

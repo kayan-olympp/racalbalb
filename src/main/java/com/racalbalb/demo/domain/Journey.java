@@ -15,24 +15,32 @@ public class Journey {
 
     @Id @Column(name="JOURNEY_ID")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     @Column(name="JOURNEY_FROM")
-    public String from;
+    private String from;
 
     @Column(name="JOURNEY_TO")
-    public String to;
+    private String to;
 
     @OneToOne
     @JoinColumn(name = "DRIVER_ID")
-    public Driver driver;
+    private Driver driver;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(name = "JOURNEY_PASSENGERS",
             joinColumns = { @JoinColumn(name = "PASSENGERS_PASSENGER_ID") },
             inverseJoinColumns = { @JoinColumn(name = "JOURNEY_JOURNEY_ID") }
     )
-    public Set<Passenger> passengers;
+    private Set<Passenger> passengers;
+
+    public Journey() {}
+
+    public Journey( Long id, String from, String to) {
+        this.id = id;
+        this.from = from;
+        this.to = to;
+    }
 
     public void setId(Long id){
         this.id = id;

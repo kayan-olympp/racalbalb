@@ -30,6 +30,8 @@ public class Driver implements Identifiable<Long>{
     @JsonIgnore
     private List<Journey> journeys;
 
+    public Driver() {}
+
     public Driver( Long id, String firstname, String lastname) {
         this.id = id;
         this.firstname = firstname;

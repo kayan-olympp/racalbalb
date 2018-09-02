@@ -23,6 +23,14 @@ public class Passenger implements Identifiable<Long> {
     @Column(name="PASSENGER_LASTNAME")
     private String lastname;
 
+    public Passenger() {}
+
+    public Passenger( Long id, String firstname, String lastname) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
     public void setId(Long id){
         this.id = id;
     }
