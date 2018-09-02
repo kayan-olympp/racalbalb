@@ -9,5 +9,6 @@ import java.util.List;
 @Repository
 public interface JourneyRepository extends JpaRepository<Journey,Long> {
     List<Journey> findByFromAndTo(String From, String To);
-    List<Journey> findPassengerAndJourneyByDriver(Long driverId);
+    void deleteByDriverId(Long driverId);
+    List<Journey> findDistinctJourneyIdByDriverId(Long driverId);
 }

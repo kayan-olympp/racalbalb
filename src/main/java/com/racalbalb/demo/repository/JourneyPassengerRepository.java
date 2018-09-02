@@ -10,6 +10,6 @@ import java.util.List;
 public interface JourneyPassengerRepository extends JpaRepository<JourneyPassenger, JourneyPassenger> {
     void deleteByJourneyId(Long driverId);
     void deleteByPassengerId(Long passengerId);
-    void deleteAllByJourneyId(List<Long> journeyId);
+    void deleteAllByJourneyIdIn(List<Long> journeyId);
     boolean existsJourneyPassengerByJourneyIdAndAndPassengerId(Long journeyId, Long passengerId);
 }

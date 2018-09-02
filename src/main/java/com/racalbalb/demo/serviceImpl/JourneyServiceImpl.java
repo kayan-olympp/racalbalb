@@ -9,6 +9,7 @@ import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.service.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -87,6 +88,7 @@ public class JourneyServiceImpl implements JourneyService {
      * @return
      */
     @DeleteMapping("/{journeyId}")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> deleteJourney(@PathVariable(name="journeyId")Long journeyId){
 
         ResponseEntity<Object> result;
@@ -129,10 +131,6 @@ public class JourneyServiceImpl implements JourneyService {
     public ResponseEntity<Object> addPassenger(@PathVariable(name="passengerId")Long passengerId, @PathVariable(name="journeyId")Long journeyId) {
         JourneyPassenger jp = new JourneyPassenger(journeyId,passengerId);
         journeyPassengerRepository.save(jp);
-
-
-
-
         ResponseEntity<Object> result;
         // Check if journey and passenger exist
         Optional<Journey> journeyDB = journeyRepository.findById(journeyId);

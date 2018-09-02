@@ -6,6 +6,7 @@ import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -67,6 +68,7 @@ public class PassengerServiceImpl implements PassengerService {
         return result;
     }
     @DeleteMapping("/{passengerId}")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> deletePassenger(@PathVariable(name="passengerId")Long passengerId){
 
         ResponseEntity<Object> result;

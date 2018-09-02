@@ -27,11 +27,6 @@ public class Journey {
     @JoinColumn(name = "DRIVER_ID")
     private Driver driver;
 
-    /*@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    @JoinTable(name = "JOURNEY_PASSENGERS",
-            joinColumns = { @JoinColumn(name = "PASSENGERS_PASSENGER_ID"), @JoinColumn(name = "JOURNEY_JOURNEY_ID")},
-            inverseJoinColumns = { @JoinColumn(name = "JOURNEY_ID") }
-    )*/
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
@@ -56,6 +51,10 @@ public class Journey {
 
     public Long getId() {
         return id;
+    }
+    public Long driverId() {
+        return this.driver.getId();
+
     }
 
 }

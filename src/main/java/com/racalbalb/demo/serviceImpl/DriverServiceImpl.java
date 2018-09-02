@@ -1,18 +1,21 @@
 package com.racalbalb.demo.serviceImpl;
 
 import com.racalbalb.demo.domain.Driver;
+import com.racalbalb.demo.domain.Journey;
 import com.racalbalb.demo.repository.DriverRepository;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/drivers")
@@ -68,15 +71,17 @@ public class DriverServiceImpl implements DriverService {
         return result;
     }
     @DeleteMapping("/{driverId}")
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> deleteDriver(@PathVariable(name="driverId")Long driverId){
         ResponseEntity<Object> result;
         try {
             // get all journey of driver
-            // List<Long> journeysOfDriver =journeyRepository.findDistinctJourneyByDriver(driverId);
+            List<Journey> journeysOfDriver =journeyRepository.findDistinctJourneyIdByDriverId(driverId);
+            List<Long> journeysOfDriverId = journeysOfDriver.stream().map(Journey::getId).collect(Collectors.toList());
             // deleta all passenger of a driver's journeys
-            // journeyPassengerRepository.deleteAllByJourneyId(journeysOfDriver);
+            journeyPassengerRepository.deleteAllByJourneyIdIn(journeysOfDriverId);
             // then delete all journey of driver
-            // journeyRepository.deleteAllByDriver(driverId);
+            journeyRepository.deleteByDriverId(driverId);
             // then delete all journey of driver
             driverRepository.deleteById(driverId);
             result = ResponseEntity.accepted().build();
