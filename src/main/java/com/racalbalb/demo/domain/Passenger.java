@@ -1,8 +1,12 @@
 package com.racalbalb.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.hateoas.Identifiable;
+
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * This class reprensent a passenger
@@ -13,7 +17,7 @@ import javax.persistence.*;
 @Table(name="PASSENGER")
 public class Passenger implements Identifiable<Long> {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="PASSENGER_ID")
     private Long id;
 
@@ -22,7 +26,10 @@ public class Passenger implements Identifiable<Long> {
 
     @Column(name="PASSENGER_LASTNAME")
     private String lastname;
-
+    @JsonIgnore
+    @ApiModelProperty(hidden = true)
+    @ManyToMany(mappedBy="passengers")
+    private List<Journey> journeys;
     public Passenger() {}
 
     public Passenger( Long id, String firstname, String lastname) {

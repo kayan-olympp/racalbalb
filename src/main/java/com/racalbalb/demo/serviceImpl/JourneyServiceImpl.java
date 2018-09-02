@@ -25,13 +25,22 @@ public class JourneyServiceImpl implements JourneyService {
      */
     @Autowired
     private JourneyRepository journeyRepository;
+    @Autowired
+
     private JourneyPassengerRepository journeyPassengerRepository;
+    @Autowired
+
     private PassengerRepository passengerRepository;
 
     public void setJourneyRepository(JourneyRepository journeyRepository) {
         this.journeyRepository = journeyRepository;
     }
-
+    public void setJourneyPassengerRepository(JourneyPassengerRepository journeyPassengerRepository) {
+        this.journeyPassengerRepository = journeyPassengerRepository;
+    }
+    public void setPassengerRepository(PassengerRepository passengerRepository) {
+        this.passengerRepository = passengerRepository;
+    }
     @PostMapping("seach")
     public ResponseEntity<Object> getJourneyByCities( @RequestParam(name="from")String from, @RequestParam(name="to")String to) {
         List<Journey> journeys =  journeyRepository.findByFromAndTo(from, to);
@@ -82,7 +91,7 @@ public class JourneyServiceImpl implements JourneyService {
 
         ResponseEntity<Object> result;
         try {
-            journeyPassengerRepository.deleteAllByJourneyId(journeyId);
+            journeyPassengerRepository.deleteByJourneyId(journeyId);
             journeyRepository.deleteById(journeyId);
             result = ResponseEntity.accepted().build();
         } catch (Exception e) {

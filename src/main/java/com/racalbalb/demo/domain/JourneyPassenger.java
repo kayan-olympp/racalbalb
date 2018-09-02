@@ -11,17 +11,17 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name="JOURNEY_PASSENGERS")
+@Table(name="JOURNEY_PASSENGER")
 @IdClass(JourneyPassenger.class)
 public class JourneyPassenger implements Serializable {
 
-    @Id @Column(name="JOURNEY_JOURNEY_ID")
-    public Long journeyId;
+    @Id @Column(name="JOURNEY_ID")
+    private Long journeyId;
 
-    @Id @Column(name="PASSENGERS_PASSENGER_ID")
-    public Long passengerId;
+    @Id @Column(name="PASSENGER_ID")
+    private Long passengerId;
 
-    public JourneyPassenger(){ }
+    private JourneyPassenger(){ }
 
     public JourneyPassenger(Long p_journeyId, Long p_passengerId){
         this.journeyId = p_journeyId;

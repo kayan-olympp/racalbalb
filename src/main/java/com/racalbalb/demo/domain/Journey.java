@@ -2,7 +2,7 @@ package com.racalbalb.demo.domain;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * This class reprent a journey
@@ -14,7 +14,7 @@ import java.util.Set;
 public class Journey {
 
     @Id @Column(name="JOURNEY_ID")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
     @Column(name="JOURNEY_FROM")
@@ -27,12 +27,20 @@ public class Journey {
     @JoinColumn(name = "DRIVER_ID")
     private Driver driver;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    /*@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @JoinTable(name = "JOURNEY_PASSENGERS",
-            joinColumns = { @JoinColumn(name = "PASSENGERS_PASSENGER_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "JOURNEY_JOURNEY_ID") }
-    )
-    private Set<Passenger> passengers;
+            joinColumns = { @JoinColumn(name = "PASSENGERS_PASSENGER_ID"), @JoinColumn(name = "JOURNEY_JOURNEY_ID")},
+            inverseJoinColumns = { @JoinColumn(name = "JOURNEY_ID") }
+    )*/
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(
+            name="JOURNEY_PASSENGER",
+            joinColumns=@JoinColumn(name="JOURNEY_ID", table ="JOURNEY_PASSENGER", referencedColumnName="JOURNEY_ID"),
+            inverseJoinColumns=@JoinColumn(name="PASSENGER_ID", table ="JOURNEY_PASSENGER", referencedColumnName="PASSENGER_ID"))
+    private List<Passenger> passengers;
 
     public Journey() {}
 

@@ -2,6 +2,8 @@ package com.racalbalb.demo.serviceImpl;
 
 import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.repository.DriverRepository;
+import com.racalbalb.demo.repository.JourneyPassengerRepository;
+import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,10 @@ public class DriverServiceImpl implements DriverService {
 
     @Autowired
     private DriverRepository driverRepository;
+    @Autowired
+    private JourneyRepository journeyRepository;
+    @Autowired
+    private JourneyPassengerRepository journeyPassengerRepository;
 
     public void setDriverRepository(DriverRepository driverRepository) {
 
@@ -65,6 +71,13 @@ public class DriverServiceImpl implements DriverService {
     public ResponseEntity<Object> deleteDriver(@PathVariable(name="driverId")Long driverId){
         ResponseEntity<Object> result;
         try {
+            // get all journey of driver
+            // List<Long> journeysOfDriver =journeyRepository.findDistinctJourneyByDriver(driverId);
+            // deleta all passenger of a driver's journeys
+            // journeyPassengerRepository.deleteAllByJourneyId(journeysOfDriver);
+            // then delete all journey of driver
+            // journeyRepository.deleteAllByDriver(driverId);
+            // then delete all journey of driver
             driverRepository.deleteById(driverId);
             result = ResponseEntity.accepted().build();
         } catch (Exception e) {

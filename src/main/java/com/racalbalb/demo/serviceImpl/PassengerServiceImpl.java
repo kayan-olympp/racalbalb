@@ -1,6 +1,7 @@
 package com.racalbalb.demo.serviceImpl;
 
 import com.racalbalb.demo.domain.Passenger;
+import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,16 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Autowired
     private PassengerRepository passengerRepository;
+    @Autowired
+    private JourneyPassengerRepository journeyPassengerRepository;
 
     public void setPassengerRepository(PassengerRepository passengerRepository) {
         this.passengerRepository = passengerRepository;
     }
+    public void setJourneyPassengerRepository(JourneyPassengerRepository journeyPassengerRepository) {
+        this.journeyPassengerRepository = journeyPassengerRepository;
+    }
+
     @RequestMapping(method= RequestMethod.GET)
     public ResponseEntity<Object> getPassengers() {
         List<Passenger> passengers = passengerRepository.findAll();
@@ -64,7 +71,10 @@ public class PassengerServiceImpl implements PassengerService {
 
         ResponseEntity<Object> result;
         try {
+
+            journeyPassengerRepository.deleteByPassengerId(passengerId);
             passengerRepository.deleteById(passengerId);
+
             result = ResponseEntity.accepted().build();
         } catch (Exception e) {
             result = ResponseEntity.notFound().build();

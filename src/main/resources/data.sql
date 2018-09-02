@@ -25,11 +25,11 @@ values(4, 'KYOTO', 'TOKYO', 2);
 insert into JOURNEY
 values(5, 'TOKYO', 'PARIS', 2);
 
-insert into JOURNEY_PASSENGERS
-values(3,2);
+insert into JOURNEY_PASSENGER
+values(2,3);
 
-insert into JOURNEY_PASSENGERS
-values(3,1);
+insert into JOURNEY_PASSENGER
+values(1,3);
 
-insert into JOURNEY_PASSENGERS
+insert into JOURNEY_PASSENGER
 values(2,1);

@@ -1,11 +1,9 @@
 package com.racalbalb.demo.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * This class reprensent a driver
@@ -16,7 +14,7 @@ import java.util.List;
 @Table(name="DRIVER")
 public class Driver implements Identifiable<Long>{
 
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name="DRIVER_ID")
     private Long id;
 
@@ -25,10 +23,6 @@ public class Driver implements Identifiable<Long>{
 
     @Column(name="DRIVER_LASTNAME")
     private String lastname;
-
-    @OneToMany
-    @JsonIgnore
-    private List<Journey> journeys;
 
     public Driver() {}
 
