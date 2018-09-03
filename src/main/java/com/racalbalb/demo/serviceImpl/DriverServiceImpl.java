@@ -1,12 +1,19 @@
 package com.racalbalb.demo.serviceImpl;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
+
+import com.racalbalb.demo.assembler.DriverResourceAssembler;
 import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.domain.Journey;
+import com.racalbalb.demo.exception.ResourceNotFoundException;
 import com.racalbalb.demo.repository.DriverRepository;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -20,38 +27,35 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/drivers")
 public class DriverServiceImpl implements DriverService {
-    /**
-     * TODO : Do it better for error
-     * TODO : Exception when FK on delete
-     */
 
     @Autowired
-    private DriverRepository driverRepository;
+    private final DriverRepository driverRepository;
+    private final DriverResourceAssembler driverAssembler;
+
     @Autowired
     private JourneyRepository journeyRepository;
     @Autowired
     private JourneyPassengerRepository journeyPassengerRepository;
 
-    public void setDriverRepository(DriverRepository driverRepository) {
+    public DriverServiceImpl(DriverRepository driverRepository, DriverResourceAssembler driverAssembler) {
 
         this.driverRepository = driverRepository;
+        this.driverAssembler = driverAssembler;
     }
 
-    @RequestMapping(method= RequestMethod.GET)
-    public ResponseEntity<Object> getDrivers() {
-        List<Driver> drivers = driverRepository.findAll();
-        return ResponseEntity.ok(drivers);
+    @GetMapping()
+    public Resources<Resource<Driver>> all() {
+        List<Resource<Driver>> drivers = driverRepository.findAll().stream()
+                .map(driverAssembler::toResource)
+                .collect(Collectors.toList());
+        return new Resources<>(drivers,
+                linkTo(methodOn(DriverServiceImpl.class).all()).withSelfRel());
     }
-
-    @RequestMapping(value="/{driverId}", method= RequestMethod.GET)
-    public ResponseEntity<Object> getDriver(@PathVariable(name="driverId")Long driverId) {
-        ResponseEntity<Object> result;
-        Optional<Driver> driver =  driverRepository.findById(driverId);
-        if (!driver.isPresent())
-            result = ResponseEntity.notFound().build();
-        else
-            result = ResponseEntity.ok(driver.get());
-        return result;
+    @GetMapping("/drivers/{driverId}")
+    public Resource<Driver> one(@PathVariable(name="driverId")Long driverId) {
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new ResourceNotFoundException("Driver " + driverId + "not found"));
+        return driverAssembler.toResource(driver);
     }
     // create
     @PostMapping

@@ -1,10 +1,14 @@
 package com.racalbalb.demo.serviceImpl;
 
+import com.racalbalb.demo.assembler.PassengerResourceAssembler;
 import com.racalbalb.demo.domain.Passenger;
+import com.racalbalb.demo.exception.ResourceNotFoundException;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -13,43 +17,43 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/passengers")
 public class PassengerServiceImpl implements PassengerService {
-    /**
-     * TODO : Do it better for error
-     * TODO : Exception when FK on delete
-     */
 
     @Autowired
-    private PassengerRepository passengerRepository;
+    private final PassengerRepository passengerRepository;
+    private final PassengerResourceAssembler passengerAssembler;
     @Autowired
     private JourneyPassengerRepository journeyPassengerRepository;
 
-    public void setPassengerRepository(PassengerRepository passengerRepository) {
+    public PassengerServiceImpl(PassengerRepository passengerRepository, PassengerResourceAssembler passengerAssembler) {
+
         this.passengerRepository = passengerRepository;
-    }
-    public void setJourneyPassengerRepository(JourneyPassengerRepository journeyPassengerRepository) {
-        this.journeyPassengerRepository = journeyPassengerRepository;
+        this.passengerAssembler = passengerAssembler;
     }
 
-    @RequestMapping(method= RequestMethod.GET)
-    public ResponseEntity<Object> getPassengers() {
-        List<Passenger> passengers = passengerRepository.findAll();
-        return ResponseEntity.ok(passengers);
+    @GetMapping()
+    public Resources<Resource<Passenger>> all() {
+        List<Resource<Passenger>> passengers = passengerRepository.findAll().stream()
+                .map(passengerAssembler::toResource)
+                .collect(Collectors.toList());
+        return new Resources<>(passengers,
+                linkTo(methodOn(PassengerServiceImpl.class).all()).withSelfRel());
     }
 
-    @RequestMapping(value="/{passengerId}", method= RequestMethod.GET)
-    public ResponseEntity<Object> getPassenger(@PathVariable(name="passengerId")Long passengerId) {
-        ResponseEntity<Object> result;
-        Optional<Passenger> passenger =  passengerRepository.findById(passengerId);
-        if (!passenger.isPresent())
-            result = ResponseEntity.notFound().build();
-        else
-            result = ResponseEntity.ok(passenger.get());
-        return result;
+    @GetMapping("/{passengerId}")
+    public Resource<Passenger> one(@PathVariable(name="passengerId")Long passengerId) {
+        Passenger passenger = passengerRepository.findById(passengerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Passenger " + passengerId + "not found"));
+        return passengerAssembler.toResource(passenger);
     }
+
     // create
     @PostMapping
     public ResponseEntity<Object> savePassenger(Passenger passenger){

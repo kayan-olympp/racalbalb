@@ -1,6 +1,8 @@
 package com.racalbalb.demo.service;
 
 import com.racalbalb.demo.domain.Driver;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 
 public interface DriverService {
@@ -8,28 +10,28 @@ public interface DriverService {
      * Get all drivers from DB
      * @return
      */
-    public ResponseEntity<Object> getDrivers();
+    Resources<Resource<Driver>> all();
 
     /**
      * Get driver by driverId from DB
      * @param driverId
      * @return
      */
-    public ResponseEntity<Object> getDriver(Long driverId);
+    Resource<Driver> one(Long driverId);
 
     /**
      * Create or update a driver
      * @param driver
      * @return
      */
-    public ResponseEntity<Object> saveDriver(Driver driver);
+    ResponseEntity<Object> saveDriver(Driver driver);
 
     /**
      * Delete driver by driverId
      * @param driverId
      * @return
      */
-    public ResponseEntity<Object> deleteDriver(Long driverId);
+    ResponseEntity<Object> deleteDriver(Long driverId);
 
     /**
      * Update driverId by new driver driver
