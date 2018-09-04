@@ -4,6 +4,7 @@ import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.repository.DriverRepository;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
+import com.racalbalb.demo.util.AlreadyExistException;
 import com.racalbalb.demo.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 @Service
 public class DriverServiceImpl implements DriverService {
-    @Autowired
     private DriverRepository driverRepository;
-    @Autowired
     private JourneyRepository journeyRepository;
-    @Autowired
-    private JourneyPassengerRepository journeyPassengerRepository;
+
+    public DriverServiceImpl (DriverRepository driverRepository,
+                              JourneyRepository journeyRepository) {
+        this.driverRepository = driverRepository;
+        this.journeyRepository = journeyRepository;
+    }
+
 
     @Override
     public List<Driver> all() {
@@ -30,7 +34,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver saveDriver(Driver driver) throws ResourceNotFoundException {
+    public Driver saveDriver(Driver driver) throws AlreadyExistException {
         return driverRepository.save(driver);
     }
 
@@ -45,7 +49,7 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver updateDriver(Driver driver, Long driveId) {
+    public Driver updateDriver(Driver driver, Long driveId) throws ResourceNotFoundException{
         driver.setId(driveId);
         return driverRepository.save(driver);
     }

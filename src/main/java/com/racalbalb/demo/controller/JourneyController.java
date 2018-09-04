@@ -11,7 +11,6 @@ import java.util.List;
 @RequestMapping("/api/journeys")
 public class JourneyController {
 
-    @Autowired
     private final JourneyService journeyService;
     private final JourneyResourceAssembler journeyAssembler;
 
@@ -22,10 +21,13 @@ public class JourneyController {
     }
 
     @PostMapping("/seach")
-    public List<Journey>  getJourneyByCities( @RequestParam(name="from")String from, @RequestParam(name="to")String to) {
+    public List<Journey> getJourneyByCities( @RequestParam(name="from")String from, @RequestParam(name="to")String to) {
         return journeyService.getJourneyByCities(from, to);
     }
-
+    @GetMapping("/driver/{driverId}")
+    public List<Journey> getJourneyByCities( @RequestParam(name="driver")Long driver) {
+        return journeyService.getJourneyByDriver(driver);
+    }
     @GetMapping()
     public List<Journey> all() {
         return journeyService.all();
@@ -44,8 +46,7 @@ public class JourneyController {
     /**
      * Remove a journey
      * Should remove all passenger to this journey
-     * @param journeyId
-     * @return
+     * @param journeyId journey ID
      * Response with status 201 if deleted
      * Response with status 404 on error
      */
@@ -81,8 +82,8 @@ public class JourneyController {
 
     /**
      *
-     * @param passengerId
-     * @param journeyId
+     * @param passengerId passenger ID
+     * @param journeyId journey ID
      * Response with status 201 if deleted
      * Response with status 404 on error
      */

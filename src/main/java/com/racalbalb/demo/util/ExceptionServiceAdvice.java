@@ -15,6 +15,9 @@ public class ExceptionServiceAdvice {
     public ResponseEntity<ExceptionResponse> notFoundException(final ResourceNotFoundException e) {
         return error(e, HttpStatus.NOT_FOUND, e.toString());
     }
+    public ResponseEntity<ExceptionResponse> alreadyExistException(final AlreadyExistException e) {
+        return error(e, HttpStatus.CONFLICT, e.toString());
+    }
 
     private ResponseEntity<ExceptionResponse> error(
             final Exception exception, final HttpStatus httpStatus, final String logRef) {

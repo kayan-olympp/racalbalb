@@ -8,59 +8,60 @@ import java.util.List;
 
 public interface JourneyService {
     /**
-     * Get all journeys from DB
-     * @return
+     * @return all journeys from DB
      */
     List<Journey> all();
 
     /**
      * Get journey by journeyId from DB
-     * @param journeyId
-     * @return
+     * @param journeyId journey ID
+     * @return journey with journeyId
      */
-
     Journey one(Long journeyId);
+
     /**
      * Create or update a journey
-     * @param journey
-     * @return
+     * @param journey journey
+     * @return created journey journey
      */
-
     Journey saveJourney(Journey journey);
+
     /**
      * Delete journey by journeyId
-     * @param journeyId
-     * @return
+     * @param journeyId journey ID
      */
     @Transactional
     void deleteJourney(Long journeyId);
 
     /**
      * Remove passenger with passengerId from journey with journeyId
-     * @param journeyId
-     * @param passengerId
-     * @return
+     * @param journeyId journey ID
+     * @param passengerId passenger ID
      */
     @Transactional(readOnly = true)
     void deleteJourneyPassenger(Long journeyId, Long passengerId) throws ResourceNotFoundException;
 
     /**
      * Update journeyId by new passenger journey
-     * @param journey
-     * @param journeyId
-     * @return
+     * @param journey journey
+     * @param journeyId journey ID
+     * @return updated journey
      */
     Journey updateJourney(Journey journey, Long journeyId);
 
     /**
      * Add passenger with passengerId to journey with journeyId
-     * @param journeyId : journey id
-     * @param passengerId : passenger id
-     * @return
+     * @param journeyId journey ID
+     * @param passengerId passenger ID
+     * @return journey
      */
     Journey addPassenger(Long journeyId, Long passengerId);
 
-
+    /**
+     * @param driverId driver ID
+     * @return all journey of driver ID
+     */
+    List<Journey> getJourneyByDriver(Long driverId);
 
     /**
      * Get journey from from to to

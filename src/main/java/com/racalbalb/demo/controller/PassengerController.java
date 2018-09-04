@@ -11,7 +11,6 @@ import java.util.List;
 @RequestMapping("/api/passengers")
 public class PassengerController {
 
-    @Autowired
     private final PassengerService passengerService;
     private final PassengerResourceAssembler passengerAssembler;
 

@@ -7,38 +7,33 @@ import java.util.List;
 
 public interface PassengerService {
     /**
-     * Get all passengers from DB
-     * @return
+     * @return all passengers from DB
      */
     List<Passenger> all();
 
     /**
-     * Get passenger by passengerId from DB
-     * @param passengerId
-     * @return
+     * @param passengerId passenger ID
+     * @return passenger with id passengerId
      */
     Passenger one(Long passengerId);
 
     /**
-     * Create or update a passenger
-     * @param passenger
-     * @return
+     * @param passenger passenger to create
+     * @return created passenger passenger
      */
     Passenger savePassenger(Passenger passenger);
 
     /**
      * Delete passenger by passengerId
-     * @param passengerId
-     * @return
+     * @param passengerId passenger ID
      */
     @Transactional(readOnly = true)
     void deletePassenger(Long passengerId);
 
     /**
-     * Update passengerId by new passenger passenger
-     * @param passenger
-     * @param passengerId
-     * @return
+     * @param passenger passenger information to change
+     * @param passengerId passenger id to update
+     * @return updated passenger
      */
    Passenger updatePassenger(Passenger passenger, Long passengerId);
 }

@@ -5,6 +5,7 @@ import com.racalbalb.demo.domain.JourneyPassenger;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
+import com.racalbalb.demo.util.AlreadyExistException;
 import com.racalbalb.demo.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,16 @@ import java.util.List;
 @Service
 public class JourneyServiceImpl implements JourneyService {
 
-    @Autowired
     private JourneyRepository journeyRepository;
 
-    @Autowired
     private JourneyPassengerRepository journeyPassengerRepository;
 
-    @Autowired
-    private PassengerRepository passengerRepository;
+    public JourneyServiceImpl(JourneyRepository journeyRepository, JourneyPassengerRepository journeyPassengerRepository ){
+        this.journeyRepository = journeyRepository;
+        this.journeyPassengerRepository = journeyPassengerRepository;
+    }
+
+
     @Override
     public List<Journey> getJourneyByCities( String from, String to) {
         return  journeyRepository.findByFromAndTo(from, to);
@@ -33,12 +36,12 @@ public class JourneyServiceImpl implements JourneyService {
         return journeyRepository.findAll();
     }
     @Override
-    public Journey one(Long journeyId) {
+    public Journey one(Long journeyId) throws ResourceNotFoundException{
         return journeyRepository.findById(journeyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Journey " + journeyId + " not found"));
     }
     @Override
-    public Journey saveJourney(Journey journey){
+    public Journey saveJourney(Journey journey) throws AlreadyExistException {
         return journeyRepository.save(journey);
 
     }
@@ -52,13 +55,13 @@ public class JourneyServiceImpl implements JourneyService {
      */
     @Override
     @Transactional
-    public void deleteJourney(Long journeyId){
+    public void deleteJourney(Long journeyId) throws ResourceNotFoundException {
         journeyRepository.deleteById(journeyId);
     }
     /**
      *
-     * @param passengerId
-     * @param journeyId
+     * @param passengerId passenger ID
+     * @param journeyId journey ID
      * Response with status 201 if deleted
      * Response with status 404 on error
      */
@@ -75,8 +78,8 @@ public class JourneyServiceImpl implements JourneyService {
 
     @Override
     public Journey updateJourney(
-            @RequestBody Journey journey,
-            @PathVariable(name="journeyId")Long journeyId){
+            Journey journey,
+            Long journeyId){
 
         journey.setId(journeyId);
         return journeyRepository.save(journey);
@@ -91,10 +94,15 @@ public class JourneyServiceImpl implements JourneyService {
      * Response with status 201 if created
      * Response with status 400 (bad request) on error
      */
-    public Journey addPassenger( Long journeyId, Long passengerId ) {
+    public Journey addPassenger( Long journeyId, Long passengerId ) throws AlreadyExistException {
         JourneyPassenger jp = new JourneyPassenger(journeyId,passengerId);
         journeyPassengerRepository.save(jp);
         return journeyRepository.findById(journeyId).orElse(new Journey());
+    }
+
+    @Override
+    public List<Journey> getJourneyByDriver(Long driverId) {
+        return journeyRepository.findDistinctJourneyIdByDriverId(driverId);
     }
 
 }

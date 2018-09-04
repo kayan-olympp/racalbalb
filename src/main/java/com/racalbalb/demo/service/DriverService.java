@@ -8,38 +8,33 @@ import java.util.List;
 // Business logic abstractions, this layer has no idea how to communicate with datasource
 public interface DriverService {
     /**
-     * Get all drivers from DB
-     * @return
+     * @return all drivers from DB
      */
     List<Driver> all();
 
     /**
-     * Get driver by driverId from DB
-     * @param driverId
-     * @return
+     * @param driverId driver ID
+     * @return driver with id driver
      */
     Driver one(Long driverId);
 
     /**
-     * Create or update a driver
-     * @param driver
-     * @return
+     * @param driver driver
+     * @return created driver driver
      */
     Driver saveDriver(Driver driver);
 
     /**
      * Delete driver by driverId
-     * @param driverId
-     * @return
+     * @param driverId driverId
      */
     @Transactional
     void deleteDriver(Long driverId) throws ResourceNotFoundException;
 
     /**
-     * Update driverId by new driver driver
-     * @param driver
-     * @param driveId
-     * @return
+     * @param driver driver
+     * @param driveId driverId
+     * @return updated driver
      */
     Driver updateDriver(Driver driver, Long driveId);
 }

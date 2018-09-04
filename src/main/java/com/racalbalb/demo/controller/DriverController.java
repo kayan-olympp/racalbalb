@@ -11,9 +11,7 @@ import java.util.List;
 @RequestMapping("/api/drivers")
 public class DriverController {
 
-    @Autowired
     private final DriverResourceAssembler driverAssembler;
-    @Autowired
     private final DriverService driverService;
 
     public DriverController(DriverService driverService, DriverResourceAssembler driverAssembler) {
