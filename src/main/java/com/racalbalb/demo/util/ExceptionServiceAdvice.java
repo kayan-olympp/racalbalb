@@ -1,6 +1,5 @@
-package com.racalbalb.demo.serviceAdvice;
+package com.racalbalb.demo.util;
 
-import com.racalbalb.demo.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

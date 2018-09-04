@@ -4,7 +4,7 @@ import com.racalbalb.demo.domain.Driver;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
-
+// Business logic abstractions, this layer has no idea how to communicate with datasource
 public interface DriverService {
     /**
      * Get all drivers from DB

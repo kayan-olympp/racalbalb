@@ -1,4 +1,4 @@
-package com.racalbalb.demo.exception;
+package com.racalbalb.demo.util;
 
 public class ResourceNotFoundException extends RuntimeException{
 

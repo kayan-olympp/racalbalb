@@ -1,11 +1,11 @@
-package com.racalbalb.demo.serviceImpl;
+package com.racalbalb.demo.controller;
 
 import com.racalbalb.demo.assembler.PassengerResourceAssembler;
 import com.racalbalb.demo.domain.Passenger;
-import com.racalbalb.demo.exception.ResourceNotFoundException;
+import com.racalbalb.demo.service.PassengerService;
+import com.racalbalb.demo.util.ResourceNotFoundException;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
-import com.racalbalb.demo.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
@@ -24,7 +24,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/passengers")
-public class PassengerServiceImpl implements PassengerService {
+public class PassengerController implements PassengerService {
 
     @Autowired
     private final PassengerRepository passengerRepository;
@@ -32,7 +32,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Autowired
     private JourneyPassengerRepository journeyPassengerRepository;
 
-    public PassengerServiceImpl(PassengerRepository passengerRepository, PassengerResourceAssembler passengerAssembler) {
+    public PassengerController(PassengerRepository passengerRepository, PassengerResourceAssembler passengerAssembler) {
 
         this.passengerRepository = passengerRepository;
         this.passengerAssembler = passengerAssembler;
@@ -44,7 +44,7 @@ public class PassengerServiceImpl implements PassengerService {
                 .map(passengerAssembler::toResource)
                 .collect(Collectors.toList());
         return new Resources<>(passengers,
-                linkTo(methodOn(PassengerServiceImpl.class).all()).withSelfRel());
+                linkTo(methodOn(PassengerController.class).all()).withSelfRel());
     }
 
     @GetMapping("/{passengerId}")

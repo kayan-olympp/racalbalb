@@ -1,4 +1,4 @@
-package com.racalbalb.demo.serviceAdvice;
+package com.racalbalb.demo.util;
 
 import org.springframework.http.HttpStatus;
 

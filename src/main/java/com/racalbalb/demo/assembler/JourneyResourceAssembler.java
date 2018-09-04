@@ -1,9 +1,10 @@
 package com.racalbalb.demo.assembler;
 
+import com.racalbalb.demo.controller.JourneyController;
 import com.racalbalb.demo.domain.Journey;
-import com.racalbalb.demo.serviceImpl.JourneyServiceImpl;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -15,7 +16,7 @@ public class JourneyResourceAssembler implements ResourceAssembler<Journey, Reso
     public Resource<Journey> toResource(Journey journey) {
 
         return new Resource<>(journey,
-                linkTo(methodOn(JourneyServiceImpl.class).one(journey.getId())).withSelfRel(),
-                linkTo(methodOn(JourneyServiceImpl.class).all()).withRel("journeys"));
+                ControllerLinkBuilder.linkTo(methodOn(JourneyController.class).one(journey.getId())).withSelfRel(),
+                linkTo(methodOn(JourneyController.class).all()).withRel("journeys"));
     }
 }

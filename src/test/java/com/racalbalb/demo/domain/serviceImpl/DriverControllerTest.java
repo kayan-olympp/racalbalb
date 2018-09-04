@@ -1,5 +1,6 @@
-package com.racalbalb.demo.serviceImpl;
+package com.racalbalb.demo.domain.serviceImpl;
 
+import com.racalbalb.demo.controller.DriverController;
 import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.repository.DriverRepository;
 import org.junit.Assert;
@@ -17,10 +18,10 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.isA;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DriverServiceImplTest {
+public class DriverControllerTest {
 
     @InjectMocks
-    private DriverServiceImpl driverServiceImpl;
+    private DriverController driverController;
 
     @Mock
     private DriverRepository driverRepository;

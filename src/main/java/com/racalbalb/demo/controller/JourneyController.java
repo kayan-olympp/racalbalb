@@ -1,13 +1,13 @@
-package com.racalbalb.demo.serviceImpl;
+package com.racalbalb.demo.controller;
 
 import com.racalbalb.demo.assembler.JourneyResourceAssembler;
 import com.racalbalb.demo.domain.Journey;
 import com.racalbalb.demo.domain.JourneyPassenger;
 import com.racalbalb.demo.domain.Passenger;
-import com.racalbalb.demo.exception.ResourceNotFoundException;
+import com.racalbalb.demo.util.ResourceNotFoundException;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
-import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
+import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.service.JourneyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
@@ -27,7 +27,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/journeys")
-public class JourneyServiceImpl implements JourneyService {
+public class JourneyController implements JourneyService {
 
     @Autowired
     private final JourneyRepository journeyRepository;
@@ -40,7 +40,7 @@ public class JourneyServiceImpl implements JourneyService {
 
     private PassengerRepository passengerRepository;
 
-    public JourneyServiceImpl(JourneyRepository journeyRepository, JourneyResourceAssembler journeyAssembler) {
+    public JourneyController(JourneyRepository journeyRepository, JourneyResourceAssembler journeyAssembler) {
 
         this.journeyRepository = journeyRepository;
         this.journeyAssembler = journeyAssembler;
@@ -58,7 +58,7 @@ public class JourneyServiceImpl implements JourneyService {
                 .map(journeyAssembler::toResource)
                 .collect(Collectors.toList());
         return new Resources<>(journeys,
-                linkTo(methodOn(JourneyServiceImpl.class).all()).withSelfRel());
+                linkTo(methodOn(JourneyController.class).all()).withSelfRel());
 
     }
     @GetMapping("/journey/{journeyId}")

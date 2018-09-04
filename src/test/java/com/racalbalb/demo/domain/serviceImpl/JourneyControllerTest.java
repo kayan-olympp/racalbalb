@@ -1,5 +1,6 @@
-package com.racalbalb.demo.serviceImpl;
+package com.racalbalb.demo.domain.serviceImpl;
 
+import com.racalbalb.demo.controller.JourneyController;
 import com.racalbalb.demo.domain.Journey;
 import com.racalbalb.demo.repository.JourneyRepository;
 import org.junit.Assert;
@@ -17,9 +18,9 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.isA;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JourneyServiceImplTest {
+public class JourneyControllerTest {
     @InjectMocks
-    private JourneyServiceImpl journeyServiceImpl;
+    private JourneyController journeyServiceImpl;
 
     @Mock
     private JourneyRepository journeyRepository;
