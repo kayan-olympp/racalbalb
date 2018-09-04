@@ -3,24 +3,9 @@ package com.racalbalb.demo.controller;
 import com.racalbalb.demo.assembler.PassengerResourceAssembler;
 import com.racalbalb.demo.domain.Passenger;
 import com.racalbalb.demo.service.PassengerService;
-import com.racalbalb.demo.util.ResourceNotFoundException;
-import com.racalbalb.demo.repository.JourneyPassengerRepository;
-import com.racalbalb.demo.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/passengers")

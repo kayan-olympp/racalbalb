@@ -1,24 +1,16 @@
 package com.racalbalb.demo.service;
 
-import com.racalbalb.demo.assembler.JourneyResourceAssembler;
 import com.racalbalb.demo.domain.Journey;
 import com.racalbalb.demo.domain.JourneyPassenger;
-import com.racalbalb.demo.domain.Passenger;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class JourneyServiceImpl implements JourneyService {

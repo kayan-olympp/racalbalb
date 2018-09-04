@@ -1,6 +1,5 @@
 package com.racalbalb.demo.util;
 
-import org.springframework.http.HttpStatus;
 
 public class ExceptionResponse {
 

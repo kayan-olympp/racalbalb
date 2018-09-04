@@ -1,19 +1,14 @@
 package com.racalbalb.demo.service;
 
-import com.racalbalb.demo.domain.Driver;
-import com.racalbalb.demo.domain.Journey;
+
 import com.racalbalb.demo.domain.Passenger;
-import com.racalbalb.demo.repository.DriverRepository;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
-import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class PassengerServiceImpl implements PassengerService {
@@ -44,7 +39,6 @@ public class PassengerServiceImpl implements PassengerService {
     public void deletePassenger(Long passengerId) throws ResourceNotFoundException {
         journeyPassengerRepository.deleteByPassengerId(passengerId);
         passengerRepository.deleteById(passengerId);
-
     }
 
     @Override

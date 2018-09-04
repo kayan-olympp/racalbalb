@@ -1,11 +1,7 @@
 package com.racalbalb.demo.service;
 
 import com.racalbalb.demo.domain.Journey;
-import com.racalbalb.demo.domain.JourneyPassenger;
 import com.racalbalb.demo.util.ResourceNotFoundException;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
