@@ -3,13 +3,16 @@ package com.racalbalb.demo.repository;
 import com.racalbalb.demo.domain.JourneyPassenger;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
+
 public interface JourneyPassengerRepository extends JpaRepository<JourneyPassenger, JourneyPassenger> {
-    void deleteByJourneyId(Long driverId);
+    long deleteByJourneyIdAndPassengerId(Long journeyId, Long passengerId);
+    // void deleteByJourneyId(Long journeyId);
     void deleteByPassengerId(Long passengerId);
-    void deleteAllByJourneyIdIn(List<Long> journeyId);
-    boolean existsJourneyPassengerByJourneyIdAndAndPassengerId(Long journeyId, Long passengerId);
+    // void deleteAllByJourneyIdIn(List<Long> journeyId);
+    // boolean existsJourneyPassengerByJourneyIdAndAndPassengerId(Long journeyId, Long passengerId);
 }

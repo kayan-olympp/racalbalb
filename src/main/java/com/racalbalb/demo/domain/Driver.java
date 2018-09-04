@@ -1,5 +1,6 @@
 package com.racalbalb.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.hateoas.Identifiable;
 
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Table(name="DRIVER")
 public class Driver implements Identifiable<Long>{
 
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="DRIVER_ID")
     private Long id;
 

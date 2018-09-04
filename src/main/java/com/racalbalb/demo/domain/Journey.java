@@ -14,7 +14,7 @@ import java.util.List;
 public class Journey {
 
     @Id @Column(name="JOURNEY_ID")
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="JOURNEY_FROM")

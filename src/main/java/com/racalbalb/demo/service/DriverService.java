@@ -1,37 +1,39 @@
 package com.racalbalb.demo.service;
 
 import com.racalbalb.demo.domain.Driver;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.ResponseEntity;
+import com.racalbalb.demo.util.ResourceNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
 // Business logic abstractions, this layer has no idea how to communicate with datasource
 public interface DriverService {
     /**
      * Get all drivers from DB
      * @return
      */
-    Resources<Resource<Driver>> all();
+    List<Driver> all();
 
     /**
      * Get driver by driverId from DB
      * @param driverId
      * @return
      */
-    Resource<Driver> one(Long driverId);
+    Driver one(Long driverId);
 
     /**
      * Create or update a driver
      * @param driver
      * @return
      */
-    ResponseEntity<Object> saveDriver(Driver driver);
+    Driver saveDriver(Driver driver);
 
     /**
      * Delete driver by driverId
      * @param driverId
      * @return
      */
-    ResponseEntity<Object> deleteDriver(Long driverId);
+    @Transactional
+    void deleteDriver(Long driverId) throws ResourceNotFoundException;
 
     /**
      * Update driverId by new driver driver
@@ -39,5 +41,5 @@ public interface DriverService {
      * @param driveId
      * @return
      */
-    public ResponseEntity<Object> updateDriver(Driver driver, Long driveId);
+    Driver updateDriver(Driver driver, Long driveId);
 }

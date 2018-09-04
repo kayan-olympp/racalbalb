@@ -24,87 +24,44 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/passengers")
-public class PassengerController implements PassengerService {
+public class PassengerController {
 
     @Autowired
-    private final PassengerRepository passengerRepository;
+    private final PassengerService passengerService;
     private final PassengerResourceAssembler passengerAssembler;
-    @Autowired
-    private JourneyPassengerRepository journeyPassengerRepository;
 
-    public PassengerController(PassengerRepository passengerRepository, PassengerResourceAssembler passengerAssembler) {
+    public PassengerController(PassengerService passengerService, PassengerResourceAssembler passengerAssembler) {
 
-        this.passengerRepository = passengerRepository;
+        this.passengerService = passengerService;
         this.passengerAssembler = passengerAssembler;
     }
 
     @GetMapping()
-    public Resources<Resource<Passenger>> all() {
-        List<Resource<Passenger>> passengers = passengerRepository.findAll().stream()
-                .map(passengerAssembler::toResource)
-                .collect(Collectors.toList());
-        return new Resources<>(passengers,
-                linkTo(methodOn(PassengerController.class).all()).withSelfRel());
+    public List<Passenger> all() {
+        return passengerService.all();
     }
 
     @GetMapping("/{passengerId}")
-    public Resource<Passenger> one(@PathVariable(name="passengerId")Long passengerId) {
-        Passenger passenger = passengerRepository.findById(passengerId)
-                .orElseThrow(() -> new ResourceNotFoundException("Passenger " + passengerId + "not found"));
-        return passengerAssembler.toResource(passenger);
+    public Passenger one(@PathVariable(name="passengerId")Long passengerId) {
+        return passengerService.one(passengerId);
     }
 
     // create
     @PostMapping
-    public ResponseEntity<Object> savePassenger(Passenger passenger){
-        ResponseEntity<Object> result;
-        Optional<Passenger> pas = passengerRepository.findById(passenger.getId());
-        if ( !pas.isPresent() ) {
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
-                    "/{id}").buildAndExpand(passenger.getId()).toUri();
-
-            result = ResponseEntity.created(location).build();
-        } else {
-            result = ResponseEntity.ok().build();
-
-        }
-        passengerRepository.save(passenger);
-        return result;
+    public Passenger savePassenger(Passenger passenger){
+       return passengerService.savePassenger(passenger);
     }
     @DeleteMapping("/{passengerId}")
-    @Transactional(readOnly = true)
-    public ResponseEntity<Object> deletePassenger(@PathVariable(name="passengerId")Long passengerId){
+    public void deletePassenger(@PathVariable(name="passengerId")Long passengerId){
+        passengerService.deletePassenger(passengerId);
 
-        ResponseEntity<Object> result;
-        try {
-
-            journeyPassengerRepository.deleteByPassengerId(passengerId);
-            passengerRepository.deleteById(passengerId);
-
-            result = ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            result = ResponseEntity.notFound().build();
-        }
-        return result;
     }
     @PutMapping("/{passengerId}")
-    public ResponseEntity<Object> updatePassenger(
+    public Passenger updatePassenger(
             @RequestBody Passenger passenger,
             @PathVariable(name="passengerId")Long passengerId){
 
-        ResponseEntity<Object> result;
-
-        Optional<Passenger> pas = passengerRepository.findById(passengerId);
-
-        if (!pas.isPresent())
-            result = ResponseEntity.notFound().build();
-        else {
-            passenger.setId(passengerId);
-            passengerRepository.save(passenger);
-            result = ResponseEntity.ok().build();
-        }
-
-        return result;
+        return passengerService.updatePassenger(passenger,passengerId);
 
     }
 }

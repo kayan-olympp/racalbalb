@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name="PASSENGER")
 public class Passenger implements Identifiable<Long> {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="PASSENGER_ID")
     private Long id;
 

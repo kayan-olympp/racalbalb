@@ -26,17 +26,12 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/drivers")
-public class DriverController implements DriverService {
+public class DriverController {
 
     @Autowired
-    //private final DriverRepository driverRepository;
     private final DriverResourceAssembler driverAssembler;
+    @Autowired
     private final DriverService driverService;
-
-    @Autowired
-    private JourneyRepository journeyRepository;
-    @Autowired
-    private JourneyPassengerRepository journeyPassengerRepository;
 
     public DriverController(DriverService driverService, DriverResourceAssembler driverAssembler) {
 
@@ -45,73 +40,30 @@ public class DriverController implements DriverService {
     }
 
     @GetMapping()
-    public Resources<Resource<Driver>> all() {
-        driverAssembler.toUserVO(driverService.all());
-        List<Resource<Driver>> drivers = driverRepository.findAll().stream()
-                .map(driverAssembler::toResource)
-                .collect(Collectors.toList());
-        return new Resources<>(drivers,
-                linkTo(methodOn(DriverController.class).all()).withSelfRel());
+    public List<Driver> all() {
+        return driverService.all();
     }
+
     @GetMapping("/drivers/{driverId}")
-    public Resource<Driver> one(@PathVariable(name="driverId")Long driverId) {
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new ResourceNotFoundException("Driver " + driverId + "not found"));
-        return driverAssembler.toResource(driver);
+    public Driver one(@PathVariable(name="driverId")Long driverId) {
+        return driverService.one(driverId);
     }
+
     // create
     @PostMapping
-    public ResponseEntity<Object> saveDriver(Driver driver){
-        ResponseEntity<Object> result;
-        Optional<Driver> pas = driverRepository.findById(driver.getId());
-        if ( !pas.isPresent() ) {
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
-                    "/{id}").buildAndExpand(driver.getId()).toUri();
-
-            result = ResponseEntity.created(location).build();
-        } else {
-            result = ResponseEntity.ok().build();
-
-        }
-        driverRepository.save(driver);
-        return result;
+    public Driver saveDriver(Driver driver){
+        return driverService.saveDriver(driver);
     }
+
     @DeleteMapping("/{driverId}")
-    @Transactional(readOnly = true)
-    public ResponseEntity<Object> deleteDriver(@PathVariable(name="driverId")Long driverId){
-        ResponseEntity<Object> result;
-        try {
-            // get all journey of driver
-            List<Journey> journeysOfDriver =journeyRepository.findDistinctJourneyIdByDriverId(driverId);
-            List<Long> journeysOfDriverId = journeysOfDriver.stream().map(Journey::getId).collect(Collectors.toList());
-            // deleta all passenger of a driver's journeys
-            journeyPassengerRepository.deleteAllByJourneyIdIn(journeysOfDriverId);
-            // then delete all journey of driver
-            journeyRepository.deleteByDriverId(driverId);
-            // then delete all journey of driver
-            driverRepository.deleteById(driverId);
-            result = ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            result = ResponseEntity.notFound().build();
-        }
-        return result;
+    public void deleteDriver(@PathVariable(name="driverId")Long driverId){
+        driverService.deleteDriver(driverId);
     }
     @PutMapping("/{driverId}")
-    public ResponseEntity<Object> updateDriver(
+    public Driver updateDriver(
             @RequestBody Driver driver,
             @PathVariable(name="driverId")Long driverId){
-        ResponseEntity<Object> result;
 
-        Optional<Driver> driverDb = driverRepository.findById(driverId);
-
-        if (!driverDb.isPresent())
-            result = ResponseEntity.notFound().build();
-        else {
-            driver.setId(driverId);
-            driverRepository.save(driver);
-            result = ResponseEntity.ok().build();
-        }
-
-        return result;
+        return driverService.updateDriver(driver, driverId);
     }
 }

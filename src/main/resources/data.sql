@@ -1,5 +1,5 @@
 insert into PASSENGER
-values(1,'passenger1', 'ahah');
+values(1,'passenger1', '');
 
 insert into PASSENGER
 values(2,'passenger2', 'uhuh');

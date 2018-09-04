@@ -18,13 +18,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class DriverResourceAssembler implements ResourceAssembler<Driver, Resource<Driver>> {
     @Override
     public Resource<Driver> toResource(Driver driver) {
-        List<Resource<Driver>> drivers = driverRepository.findAll().stream()
+       /* List<Resource<Driver>> drivers = driverRepository.findAll().stream()
                 .map(driverAssembler::toResource)
                 .collect(Collectors.toList());
         return new Resources<>(drivers,
                 linkTo(methodOn(DriverController.class).all()).withSelfRel());
         return new Resource<>(driver,
                 ControllerLinkBuilder.linkTo(methodOn(DriverController.class).one(driver.getId())).withSelfRel(),
-                linkTo(methodOn(DriverController.class).all()).withRel("drivers"));
+                linkTo(methodOn(DriverController.class).all()).withRel("drivers"));*/
+    return null;
     }
 }

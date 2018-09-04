@@ -27,61 +27,36 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/journeys")
-public class JourneyController implements JourneyService {
+public class JourneyController {
 
     @Autowired
-    private final JourneyRepository journeyRepository;
+    private final JourneyService journeyService;
     private final JourneyResourceAssembler journeyAssembler;
 
-    @Autowired
+    public JourneyController(JourneyService journeyService, JourneyResourceAssembler journeyAssembler) {
 
-    private JourneyPassengerRepository journeyPassengerRepository;
-    @Autowired
-
-    private PassengerRepository passengerRepository;
-
-    public JourneyController(JourneyRepository journeyRepository, JourneyResourceAssembler journeyAssembler) {
-
-        this.journeyRepository = journeyRepository;
+        this.journeyService = journeyService;
         this.journeyAssembler = journeyAssembler;
     }
 
-    @PostMapping("seach")
-    public ResponseEntity<Object> getJourneyByCities( @RequestParam(name="from")String from, @RequestParam(name="to")String to) {
-        List<Journey> journeys =  journeyRepository.findByFromAndTo(from, to);
-
-        return ResponseEntity.ok(journeys);
+    @PostMapping("/seach")
+    public List<Journey>  getJourneyByCities( @RequestParam(name="from")String from, @RequestParam(name="to")String to) {
+        return journeyService.getJourneyByCities(from, to);
     }
+
     @GetMapping()
-    public Resources<Resource<Journey>> all() {
-        List<Resource<Journey>> journeys = journeyRepository.findAll().stream()
-                .map(journeyAssembler::toResource)
-                .collect(Collectors.toList());
-        return new Resources<>(journeys,
-                linkTo(methodOn(JourneyController.class).all()).withSelfRel());
-
+    public List<Journey> all() {
+        return journeyService.all();
     }
+
     @GetMapping("/journey/{journeyId}")
-    public Resource<Journey> one(@PathVariable(name="journeyId")Long journeyId) {
-        Journey journey = journeyRepository.findById(journeyId)
-                .orElseThrow(() -> new ResourceNotFoundException("Journey " + journeyId + " not found"));
-        return journeyAssembler.toResource(journey);
+    public Journey one(@PathVariable(name="journeyId")Long journeyId) {
+        return journeyService.one(journeyId);
     }
+
     @PostMapping
-    public ResponseEntity<Object> saveJourney(Journey journey){
-        ResponseEntity<Object> result;
-        Optional<Journey> journeyDB = journeyRepository.findById(journey.getId());
-        if ( !journeyDB.isPresent() ) {
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
-                    "/{id}").buildAndExpand(journey.getId()).toUri();
-
-            result = ResponseEntity.created(location).build();
-        } else {
-            result = ResponseEntity.ok().build();
-
-        }
-        journeyRepository.save(journey);
-        return result;
+    public Journey saveJourney(Journey journey){
+        return journeyService.saveJourney(journey);
     }
 
     /**
@@ -93,37 +68,17 @@ public class JourneyController implements JourneyService {
      * Response with status 404 on error
      */
     @DeleteMapping("/{journeyId}")
-    @Transactional(readOnly = true)
-    public ResponseEntity<Object> deleteJourney(@PathVariable(name="journeyId")Long journeyId){
-
-        ResponseEntity<Object> result;
-        try {
-            journeyPassengerRepository.deleteByJourneyId(journeyId);
-            journeyRepository.deleteById(journeyId);
-            result = ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            result = ResponseEntity.notFound().build();
-        }
-        return result;
+    public void deleteJourney(@PathVariable(name="journeyId")Long journeyId){
+        journeyService.deleteJourney(journeyId);
     }
 
     @PutMapping("/{journeyId}")
-    public ResponseEntity<Object> updateJourney(@RequestBody Journey journey,
-                                                  @PathVariable(name="journeyId")Long journeyId){
+    public Journey updateJourney(
+            @RequestBody Journey journey,
+            @PathVariable(name="journeyId")Long journeyId){
 
-        ResponseEntity<Object> result;
+        return journeyService.saveJourney(journey);
 
-        Optional<Journey> pas = journeyRepository.findById(journeyId);
-
-        if (!pas.isPresent())
-            result = ResponseEntity.notFound().build();
-        else {
-            journey.setId(journeyId);
-            journeyRepository.save(journey);
-            result = ResponseEntity.ok().build();
-        }
-
-        return result;
 
     }
 
@@ -135,32 +90,12 @@ public class JourneyController implements JourneyService {
      * Response with status 201 if created
      * Response with status 400 (bad request) on error
      */
-    @PostMapping("/{journeyId}/passengers/{passengerId}")
-    public ResponseEntity<Object> addPassenger(@PathVariable(name="passengerId")Long passengerId, @PathVariable(name="journeyId")Long journeyId) {
-        JourneyPassenger jp = new JourneyPassenger(journeyId,passengerId);
-        journeyPassengerRepository.save(jp);
-        ResponseEntity<Object> result;
-        // Check if journey and passenger exist
-        Optional<Journey> journeyDB = journeyRepository.findById(journeyId);
-        Optional<Passenger> passengerDB = passengerRepository.findById(passengerId);
-        boolean exist = journeyPassengerRepository.existsJourneyPassengerByJourneyIdAndAndPassengerId(journeyId,passengerId);
-        if ( journeyDB.isPresent() && passengerDB.isPresent()  ) {
-            // check passenger isn't already part of the journey
-            if (!exist) {
-                URI location = ServletUriComponentsBuilder.fromCurrentRequest().path(
-                        "/{journeyId}/passengers/{passengerId}").buildAndExpand(journeyId,passengerId).toUri();
-                // return 201
-                result = ResponseEntity.created(location).build();
-            } else {
-                result = ResponseEntity.badRequest().body("Passenger already here.");
-            }
-        } else {
-            result = ResponseEntity.badRequest().body("journey " + journeyId + " or/and "
-                    + "passenger " + passengerId + " doesn't exist.");
-
-        }
-        return result;
-    }
+   @PostMapping("/{journeyId}/passengers/{passengerId}")
+    public Journey addPassenger(
+            @PathVariable(name="passengerId")Long passengerId,
+            @PathVariable(name="journeyId")Long journeyId) {
+       return journeyService.addPassenger(journeyId, passengerId);
+   }
 
     /**
      *
@@ -169,17 +104,9 @@ public class JourneyController implements JourneyService {
      * Response with status 201 if deleted
      * Response with status 404 on error
      */
-    @DeleteMapping("/{journeyId}/passengers/{passengerId}")
-    public ResponseEntity<Object> removePassenger(@PathVariable(name="passengerId")Long passengerId, @PathVariable(name="journeyId")Long journeyId) {
-        ResponseEntity<Object> result;
-        try {
-            JourneyPassenger jp = new JourneyPassenger(journeyId,passengerId);
-            journeyPassengerRepository.delete(jp);
-            result = ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            result = ResponseEntity.notFound().build();
-        }
-        return result;
+   @DeleteMapping("/{journeyId}/passengers/{passengerId}")
+   public void deleteJourneyPassenger(@PathVariable(name="passengerId")Long passengerId, @PathVariable(name="journeyId")Long journeyId) {
+       journeyService.deleteJourneyPassenger(journeyId,passengerId);
     }
 
 

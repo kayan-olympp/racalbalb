@@ -4,34 +4,38 @@ import com.racalbalb.demo.domain.Passenger;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface PassengerService {
     /**
      * Get all passengers from DB
      * @return
      */
-    Resources<Resource<Passenger>> all();
+    List<Passenger> all();
 
     /**
      * Get passenger by passengerId from DB
      * @param passengerId
      * @return
      */
-    Resource<Passenger> one(Long passengerId);
+    Passenger one(Long passengerId);
 
     /**
      * Create or update a passenger
      * @param passenger
      * @return
      */
-    ResponseEntity<Object> savePassenger(Passenger passenger);
+    Passenger savePassenger(Passenger passenger);
 
     /**
      * Delete passenger by passengerId
      * @param passengerId
      * @return
      */
-    ResponseEntity<Object> deletePassenger(Long passengerId);
+    @Transactional(readOnly = true)
+    void deletePassenger(Long passengerId);
 
     /**
      * Update passengerId by new passenger passenger
@@ -39,5 +43,5 @@ public interface PassengerService {
      * @param passengerId
      * @return
      */
-    ResponseEntity<Object> updatePassenger(Passenger passenger, Long passengerId);
+   Passenger updatePassenger(Passenger passenger, Long passengerId);
 }
