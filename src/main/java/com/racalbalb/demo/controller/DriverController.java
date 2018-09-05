@@ -3,7 +3,6 @@ package com.racalbalb.demo.controller;
 import com.racalbalb.demo.assembler.DriverResourceAssembler;
 import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.service.DriverService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

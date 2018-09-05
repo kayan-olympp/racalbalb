@@ -4,13 +4,10 @@ import com.racalbalb.demo.domain.Journey;
 import com.racalbalb.demo.domain.JourneyPassenger;
 import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
-import com.racalbalb.demo.repository.PassengerRepository;
 import com.racalbalb.demo.util.AlreadyExistException;
 import com.racalbalb.demo.util.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Service
@@ -31,19 +28,21 @@ public class JourneyServiceImpl implements JourneyService {
         return  journeyRepository.findByFromAndTo(from, to);
 
     }
+
     @Override
     public List<Journey> all() {
         return journeyRepository.findAll();
     }
+
     @Override
     public Journey one(Long journeyId) throws ResourceNotFoundException{
         return journeyRepository.findById(journeyId)
                 .orElseThrow(() -> new ResourceNotFoundException("Journey " + journeyId + " not found"));
     }
+
     @Override
     public Journey saveJourney(Journey journey) throws AlreadyExistException {
         return journeyRepository.save(journey);
-
     }
 
     /**
@@ -58,6 +57,7 @@ public class JourneyServiceImpl implements JourneyService {
     public void deleteJourney(Long journeyId) throws ResourceNotFoundException {
         journeyRepository.deleteById(journeyId);
     }
+
     /**
      *
      * @param passengerId passenger ID
@@ -65,6 +65,7 @@ public class JourneyServiceImpl implements JourneyService {
      * Response with status 201 if deleted
      * Response with status 404 on error
      */
+
     @Override
     @Transactional
     public void deleteJourneyPassenger (

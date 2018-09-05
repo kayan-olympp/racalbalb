@@ -3,7 +3,6 @@ package com.racalbalb.demo.controller;
 import com.racalbalb.demo.assembler.PassengerResourceAssembler;
 import com.racalbalb.demo.domain.Passenger;
 import com.racalbalb.demo.service.PassengerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 

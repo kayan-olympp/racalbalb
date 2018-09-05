@@ -2,11 +2,9 @@ package com.racalbalb.demo.service;
 
 import com.racalbalb.demo.domain.Driver;
 import com.racalbalb.demo.repository.DriverRepository;
-import com.racalbalb.demo.repository.JourneyPassengerRepository;
 import com.racalbalb.demo.repository.JourneyRepository;
 import com.racalbalb.demo.util.AlreadyExistException;
 import com.racalbalb.demo.util.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
